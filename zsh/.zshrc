@@ -171,7 +171,10 @@ fi
 # <<< conda initialize <<<
 
 # alsamixer restore
-alsactl --file ~/.config/asound.state --no-ucm restore
+if [[ "$(hostname)" == "adamDesktopLinux" ]]; then
+	alsactl --file ~/.config/asound.state --no-ucm restore
+fi
+
 
 # NNN
 export NNN_PLUG='f:fzcd;o:fzopen;i:imgview;p:preview-tui;d:dragndrop;c:cdpath;b:boom;m:nmount'

@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+# Start swwww
+swww query || swww init
+
+# Select the background
+# Replacing with pywal | Uncommenting this causes fading before walpaper change
+# swww img ~/.config/hypr/backgrounds/mountain1Purple.png
+fi

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd ~/.themes/phocus
+npm run watch_and_reload &

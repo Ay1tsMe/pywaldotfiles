@@ -1,0 +1,81 @@
+/*@import url("~/.cache/wal/colors.css");*/
+
+window {
+    margin: 0px;
+    border: 5px solid --wofi-color0;
+    background-color: --wofi-color0;
+    border-radius: 15px;
+}
+
+#input {
+    padding: 4px;
+    margin: 4px;
+    padding-left: 20px;
+    border: none;
+    color: --wofi-color2;
+    font-weight: bold;
+    background-color: --wofi-color1;
+   	outline: none;
+    border-radius: 15px;
+    margin: 10px;
+    margin-bottom: 2px;
+}
+
+#input:focus {
+    border: 0px solid --wofi-color8;
+    margin-bottom: 0px;
+}
+
+#inner-box {
+    margin: 4px;
+    border: 0px solid --wofi-color0;
+    color: --wofi-color1;
+    font-weight: bold;
+    background-color: --wofi-color0;
+    border-radius: 15px;
+}
+
+#outer-box {
+    margin: 0px;
+    border: none;
+    border-radius: 15px;
+    background-color: --wofi-color0;
+}
+
+#scroll {
+    margin-top: 5px;
+    border: none;
+    border-radius: 15px;
+    margin-bottom: 5px;
+    /* background: rgb(255,255,255); */
+}
+
+#img:selected {
+    background-color: --wofi-color2;
+    border-radius: 15px;
+}
+
+#text {
+    color: --wofi-color7;
+}
+
+#text:selected {
+    color: --wofi-color6;
+    margin: 0px 0px;
+    border: none;
+    border-radius: 15px;
+    background-color: --wofi-color2;
+}
+
+#entry {
+    border: none;
+    font-size: 17px;
+    padding: 3px;
+    background-color: transparent;
+}
+
+#entry:selected {
+    border: none;
+    border-radius: 15px;
+    background-color: --wofi-color2;
+}

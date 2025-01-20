@@ -1,0 +1,18 @@
+# wofi_dmenu_config
+width=600
+height=350
+location=center
+show=dmenu
+stylesheet=dmenustyle.css
+prompt=Select Wallpaper...
+filter_rate=100
+cache_file=/dev/null
+allow_markup=true
+no_actions=true
+halign=fill
+orientation=vertical
+content_halign=fill
+insensitive=true
+allow_images=true
+gtk_dark=true
+

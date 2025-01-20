@@ -1,0 +1,30 @@
+[
+  {
+    "height": 38,
+	"spacing": 10,
+    "layer": "top",
+    "position": "top",
+    "margin-top": 3,
+    "margin-left": 5,
+    "margin-right": 5,
+    "include": [
+      "~/.config/waybar/modules.json"
+    ],
+    "modules-left": [
+        "custom/logo",
+      	"custom/weather",
+        "cava",
+        "hyprland/window"
+    ],
+    "modules-center": [
+      "hyprland/workspaces"
+    ],
+    "modules-right": [
+      "group/system",
+      "group/audio",
+      "tray",
+      "clock",
+      "group/power"
+    ]
+  }
+]

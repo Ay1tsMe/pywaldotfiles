@@ -1,0 +1,176 @@
+/* The css styles are supposed to represent how the modules look 
+* starting from left to right as closely as possible*/
+
+@import url("colors-waybar.css");
+
+* {
+  border: none;
+  font-family: "JetBrainsMono NF";
+  font-weight: bold;
+  font-size: 16px;
+  min-height: 0;
+}
+
+/* Overarching styles */
+
+window#waybar {
+  background: transparent;
+  color: @color7;
+}
+
+tooltip {
+  opacity: 0.8;
+  background-color: @background;
+  color: @foreground;
+  border-radius: 5px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* TODO: Make it fade out */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 0.8;
+	}
+}
+
+
+/* Left modules */
+
+#custom-logo,
+#custom-weather,
+#window {
+  opacity: 0.8;
+  background: @background;
+  border-radius: 8px;
+  padding: 0px 10px;
+  margin: 3px 0px;
+}
+
+#cava {
+    background: #25253a;
+    margin: 5px;
+    padding: 8px 16px;
+    color: #cba6f7;
+    border-radius: 24px 10px 24px 10px;
+}
+
+/* Overwritting the previous padding style on 'custom-logo' 
+* to give proper padding to nerd font icon */
+#custom-logo {
+  color: @color3;
+  padding: 0px 15px 0px 10px;
+}
+
+/* If no windows are present on the screen,
+* this module will be transparent */
+window#waybar.empty #window {
+  background-color: transparent;
+}
+
+/* Center modules */
+#workspaces {
+  opacity: 0.8;
+  background: @background;
+  border-radius: 8px;
+  padding: 0px 5px;
+  margin: 4px 10px;
+}
+
+#workspaces button {
+  padding: 0px 11px;
+  margin: 6px 2px;
+  border-radius: 20px;
+  background: @color7;
+  transition: all 0.5s cubic-bezier(0.11, 1.09, 0.6, 0.96);
+}
+
+#workspaces button.active {
+  margin: 6px 2px;
+  padding: 0px 35px;
+  background-color: @color13;
+}
+
+#workspaces button:hover {
+  background-color: @color1;
+}
+
+/* Right modules */
+
+/* These modules are children of group/system */
+#battery,
+#cpu,
+#disk,
+#memory,
+#temperature,
+#battery,
+
+/* group/system */
+#system {
+  opacity: 0.8;
+  background: @background;
+  border-radius: 8px;
+  margin: 3px 0px;
+  padding: 0px 8px;
+}
+
+#pulseaudio,
+#pulseaudio#microphone,
+#tray,
+#audio {
+  opacity: 0.8;
+  background: @background;
+  border-radius: 8px;
+  margin: 3px 0px;
+  padding: 0px 8px;
+}
+
+#disk {
+   color: @color3;
+}
+
+#memory {
+   color: @color4;
+}
+
+#cpu {
+   color: @color5;
+}
+
+#temperature {
+   color: @color6;
+}
+
+#battery {
+   color: @color7;
+}
+
+#pulseaudio {
+   color: @color1;
+}
+
+#pulseaudio.microphone {
+   color: @color2;
+}
+
+
+#clock {
+  opacity: 0.8;
+  background: @background;
+  border-radius: 8px;
+  padding: 0px 10px;
+  margin: 3px 0px;
+}
+
+#custom-lock_screen,
+#custom-power_btn,
+#power {
+  opacity: 0.8;
+  background: @background;
+  border-radius: 8px;
+  padding: 0px 7px;
+  margin: 3px 0px;
+}
+

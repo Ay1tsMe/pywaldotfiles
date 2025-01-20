@@ -1,3 +1,9 @@
 [submodule "zsh/.oh-my-zsh"]
 	path = zsh/.oh-my-zsh
 	url = https://github.com/ohmyzsh/ohmyzsh
+[submodule "spicetify/.config/spicetify/Themes/spicetify/.config/spicetify/Themes/Spicetify-Pywal-Theme"]
+	path = spicetify/.config/spicetify/Themes/spicetify/.config/spicetify/Themes/Spicetify-Pywal-Theme
+	url = https://github.com/chloetalksalot/Spicetify-Pywal-Theme
+[submodule "spicetify/.config/spicetify/Themes/Spicetify-Pywal-Theme"]
+	path = spicetify/.config/spicetify/Themes/Spicetify-Pywal-Theme
+	url = https://github.com/chloetalksalot/Spicetify-Pywal-Theme

@@ -175,6 +175,15 @@ if [[ "$(hostname)" == "adamDesktopLinux" ]]; then
 	alsactl --file ~/.config/asound.state --no-ucm restore
 fi
 
+# Waybar workspace variables
+if [[ "$(hostname)" == "endeavourAdam" ]]; then
+    export LAPTOP=true
+    export DESKTOP=false
+elif [[ "$(hostname)" == "adamDesktopLinux" ]]; then
+    export DESKTOP=true
+    export LAPTOP=false
+fi
+
 
 # NNN
 export NNN_PLUG='f:fzcd;o:fzopen;i:imgview;p:preview-tui;d:dragndrop;c:cdpath;b:boom;m:nmount'

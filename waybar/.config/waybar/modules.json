@@ -46,8 +46,13 @@
 	    "persistent-workspaces": {
 	        "DP-1": [1, 2, 3, 4, 5],
 	        "DP-2": [1, 2, 3, 4, 5],
-	        // "eDP-1": [1, 2, 3, 4, 5]
+	        "eDP-1": [1, 2, 3, 4, 5]
 	    }
+        //"env": {
+        //    "DP-1": "DESKTOP",
+          //  "DP-2": "DESKTOP",
+          //  "eDP-1": "LAPTOP"
+       // }
     },
 
 

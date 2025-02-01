@@ -100,6 +100,7 @@ export TERMINAL="kitty"
 export EDITOR="vim"
 export BROWSER="brave_wrapper"
 export GUIPLAYER="mpv"
+export SYSTEMD_EDITOR="vim"
 
 # export MANPATH="/usr/local/man:$MANPATH"
 

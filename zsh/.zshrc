@@ -141,6 +141,7 @@ alias tvamerica="mpv --script-opts=iptv=1 https://iptv-org.github.io/iptv/countr
 alias brave="/usr/bin/brave -password-store=basic"
 alias emacs="emacsclient -c"
 alias spotify="spicetify watch -s"
+alias ps4battery="cat /sys/class/power_supply/ps-controller-battery-00:1f:e2:bc:bd:7e/capacity"
 
 # fpath
 fpath=(~/.zsh/completions $fpath)

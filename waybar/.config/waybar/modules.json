@@ -7,7 +7,7 @@
 
     "custom/logo": {
         "format": "<span font='15'>{icon}</span>",
-        "format-icons": "",
+        "format-icons": "",
 	"tooltip": false,
         "on-click": "pkill wofi; wofi"
     },

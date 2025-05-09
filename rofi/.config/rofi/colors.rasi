@@ -1,0 +1,7 @@
+@import "~/.cache/wal/colors-rofi-dark"
+* {
+    power-colors: @background;
+    text-color: @foreground;
+	message-background: @background;
+}
+

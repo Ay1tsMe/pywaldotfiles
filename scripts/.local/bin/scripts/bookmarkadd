@@ -1,0 +1,11 @@
+#!/bin/bash
+
+file="$HOME/.local/bin/scripts/wofi_files/bookmarks"
+bookmark="$(wl-paste)"
+
+if grep -q "$bookmark" "$file"; then
+	notify-send "Oops." "Already bookmarked"
+else
+	echo "$bookmark" >> "$file"
+	notify-send "Bookmark" "Bookmark has been added."
+fi

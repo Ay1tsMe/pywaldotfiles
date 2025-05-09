@@ -1,0 +1,4 @@
+#!/bin/sh
+
+qrencode -s 8 -o /tmp/qrclipboard.png "$(wl-paste)"
+imv /tmp/qrclipboard.png

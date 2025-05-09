@@ -1,0 +1,7 @@
+#!/bin/sh
+query="$@"
+if [ -z "$query" ]; then
+	echo "No search query provided. Usage: yt <query>"
+else
+	ytfzf -t --pages=3 --sort-by=upload_date "$query"
+fi

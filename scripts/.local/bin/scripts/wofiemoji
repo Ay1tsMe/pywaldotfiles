@@ -1,0 +1,13 @@
+#!/bin/bash
+
+EMOJI_FILE="$HOME/.local/bin/scripts/wofi_files/emoji"
+
+# Read and pass URLs to wofi
+selected_emoji=$(cat "$EMOJI_FILE" | wofi -d --conf="$HOME/.config/wofi/dmenuconfig" --prompt="Select Emoji...")
+
+# Type emoji selected
+if [ -n "$selected_emoji" ]; then
+	first_char="${selected_emoji:0:1}"
+	wtype "$first_char"
+
+fi

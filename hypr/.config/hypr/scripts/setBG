@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # Start swwww
-swww query || swww init
+swww query || swww-daemon
 
 # Select the background
 # Replacing with pywal | Uncommenting this causes fading before walpaper change

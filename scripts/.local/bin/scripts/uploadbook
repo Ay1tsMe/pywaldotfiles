@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Validate input arguements
+if [ -z "$1" ]; then
+    echo "No Author provided for book"
+    echo "Usage: uploadbook <author> <name_of_book.epub>"
+    exit 1
+elif [ -z "$2" ]; then
+    echo "No book provided to upload!"
+    echo "Usage: uploadbook <author> <name_of_book.epub>"
+    exit 1
+fi
+
+FOLDER="$1"
+BOOK="$2"
+
+# Strip path and extension
+BASE="${BOOK##*/}"
+BASE="${BASE%.*}"
+
+# Author = text between the first and second `--` (allow any spacing around them)
+AUTHOR=$(awk -F'[[:space:]]--[[:space:]]' '{print $2}' <<< "$BASE")
+echo $AUTHOR
+echo
+
+# Check if author folder already exists
+ssh tuxtower "bash -s -- $(printf '%q' "$FOLDER")" <<'REMOTE'
+dir="$HOME/books/$1"
+if [ -d "$dir" ]; then
+    echo "Author exists... Skipping creating directory"
+else
+    echo "Author doesnt exist... Creating directory at $dir"
+    mkdir -p "$dir" 
+    echo "Successfully created directory..."
+fi
+REMOTE
+
+echo
+
+# Copy book to author folder
+echo "Copying book to Calibre..."
+echo 
+
+if scp "$BOOK" "tuxtower:~/books/$FOLDER/"; then
+    echo "Successfully uploaded book"
+else
+    echo "Error: Failed to upload book!"
+    exit 1
+fi

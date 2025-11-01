@@ -41,9 +41,9 @@ echo "Refreshed Browser and Discord."
 # echo "Updated notification colourscheme."
 
 # Update swaync notifications
-swaync-client --reload-config
-swaync-client -rs
-echo "Updated notification colourscheme."
+#swaync-client --reload-config
+#swaync-client -rs
+#echo "Updated notification colourscheme."
 
 # Update swaylock colourscheme
 ~/.config/swaylock/update-theme.sh

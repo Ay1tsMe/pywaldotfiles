@@ -28,8 +28,10 @@ fi
 echo "Author: $AUTHOR"
 
 # If there's an author in [brackets], use that instead of the all the other authors
-if [[ "$AUTHOR" =~ \[(.+)\] ]]; then
-    AUTHOR="${BASH_REMATCH[1]}"
+if [[ "$AUTHOR" == *"["*"]"* ]]; then
+  # take text between the first '[' and the next ']'
+  AUTHOR="${AUTHOR#*[}"      # strip up to first '[' (inclusive)
+  AUTHOR="${AUTHOR%%]*}"     # strip from first ']' to end (inclusive)
 fi
 
 # if "Last, First", swap to "First Last" and drop the comma

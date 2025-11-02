@@ -27,6 +27,21 @@ fi
 
 echo "Author: $AUTHOR"
 
+# If there's an author in [brackets], use that instead of the all the other authors
+if [[ "$AUTHOR" =~ \[(.+)\] ]]; then
+    AUTHOR="${BASH_REMATCH[1]}"
+fi
+
+# if "Last, First", swap to "First Last" and drop the comma
+if [[ "$AUTHOR" == *,* ]]; then
+    last="${AUTHOR%%,*}"
+    first="${AUTHOR#*,}"
+    AUTHOR="$first $last"
+    AUTHOR="${AUTHOR:1}" # remove first character which is usually a space
+fi
+
+echo "Author: $AUTHOR"
+
 
 # Check if author folder already exists
 ssh tuxtower "bash -s -- $(printf '%q' "$FOLDER")" <<'REMOTE'

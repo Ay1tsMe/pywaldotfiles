@@ -14,14 +14,19 @@ fi
 FOLDER="$1"
 BOOK="$2"
 
-# Strip path and extension
-BASE="${BOOK##*/}"
-BASE="${BASE%.*}"
+# Extract author from metadata
+if [[ "$BOOK" == *.pdf ]]; then
+    AUTHOR=$(pdfinfo "$BOOK" | awk -F': *' '/^Author/ {print $2}')
+elif [[ "$BOOK" == *.epub ]]; then
+    AUTHOR=$(ebook-meta "$BOOK" | awk -F': *' '/^Author/ {print $2}')
+else
+    echo "Unsupported file format!"
+    echo "Please provide a .epub or .pdf file"
+    exit 1
+fi
 
-# Author = text between the first and second `--` (allow any spacing around them)
-AUTHOR=$(awk -F'[[:space:]]--[[:space:]]' '{print $2}' <<< "$BASE")
-echo $AUTHOR
-echo
+echo "Author: $AUTHOR"
+
 
 # Check if author folder already exists
 ssh tuxtower "bash -s -- $(printf '%q' "$FOLDER")" <<'REMOTE'

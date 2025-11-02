@@ -54,7 +54,7 @@ for BOOK in "$@"; do
 
     # Check if author folder already exists
     ssh tuxtower "bash -s -- $(printf '%q' "$AUTHOR")" <<'REMOTE'
-dir="$HOME/testbooks/$1"
+dir="$HOME/books/$1"
 if [ -d "$dir" ]; then
     echo
     echo "Author exists... Skipping creating directory"
@@ -73,7 +73,7 @@ REMOTE
     echo "Copying book to Calibre..."
     echo 
 
-    if scp "$BOOK" "tuxtower:~/testbooks/$AUTHOR/"; then
+    if scp "$BOOK" "tuxtower:~/books/$AUTHOR/"; then
         echo
         echo "Successfully uploaded $BOOK"
     else

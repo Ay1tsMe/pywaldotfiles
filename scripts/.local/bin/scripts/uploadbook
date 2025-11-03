@@ -31,6 +31,25 @@ for BOOK in "$@"; do
     AUTHOR="${AUTHOR%%]*}"     # strip from first ']' to end (inclusive)
     fi
 
+    # Remove all the other authors and use the first author if no [author] is present
+    comma_count=$(grep -o "," <<< "$AUTHOR" | wc -l)
+
+    # If only one word before the first comma AND more than one comma exists,
+    # this means "Last, First, Last2, First2, ..." format.
+    # first_field = first part before comma. e.g. "Last, First"
+    first_field="${AUTHOR%%,*}"
+
+    if (( comma_count > 1 )) && [[ "$first_field" != *" "* ]]; then
+        # Keep only "Last, First and remove other authors"
+        AUTHOR="$(awk -F',' '{print $1","$2}' <<< "$AUTHOR")"
+        comma_count=1
+    fi
+
+    # If still more than one comma. Take the first author
+    if (( comma_count > 1 )); then
+        AUTHOR="${AUTHOR%%,*}"
+    fi
+
     # if "Last, First", swap to "First Last" and drop the comma
     if [[ "$AUTHOR" == *,* ]]; then
         last="${AUTHOR%%,*}"

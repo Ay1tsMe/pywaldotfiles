@@ -82,3 +82,6 @@ REMOTE
         exit 1
     fi
 done
+
+echo
+echo "Done."

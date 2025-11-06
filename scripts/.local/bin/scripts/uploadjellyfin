@@ -45,7 +45,6 @@ echo
 
 # Go inside new artist folder
 cd "$artist"
-echo "Currently inside: $(pwd)"
 
 album=$(echo "$metadata" | grep -m1 "^Album[[:space:]]*:" | awk -F': ' '{print $2}')
 
@@ -65,11 +64,17 @@ if [[ -z "$year" ]]; then
     year=$(echo "$metadata" | grep -m1 "time[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
 fi
 
-echo "Album name: $album"
-echo "Album year: $year"
-
 # Rename Album folder
 new_album_name="${year} - ${album}"
-mv "$1" "$new_album_name"
-echo "Renamed folder to '$new_album_name'"
+
+if [[ "$1" == $new_album_name ]]; then
+    echo "Folder is already in correct format. Skipping..."
+    echo
+else
+    mv "$1" "$new_album_name"
+    echo "Renamed folder to '$new_album_name'"
+    echo
+fi
+
+echo "Done."
 

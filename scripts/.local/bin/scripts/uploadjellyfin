@@ -14,14 +14,19 @@ if [[ "$artist" == *","* ]]; then
         echo "$((i+1)). ${artists[$i]# }" # Remove any leading space
     done
 
-    read -p "Select which artist to use for folder: " choice
+    # Prompt user to specify artist to use for folder name
+    while true; do
+        read -p "Select which artist to use for folder: " choice
 
-    # Validate input
-    if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#artists[@]} )); then
-        artist="${artists[$((choice-1))]# }"  # Store selected artist
-    else
-        echo "Invalid selection. Please try again..."
-    fi
+        # Validate input
+        if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#artists[@]} )); then
+            artist="${artists[$((choice-1))]# }"  # Store selected artist
+            break
+        else
+            echo "Invalid selection. Please try again..."
+            echo
+        fi
+    done
 else
     echo "Single artist detected."
 fi

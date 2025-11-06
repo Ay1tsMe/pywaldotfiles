@@ -1,81 +1,6 @@
 #!/bin/bash
 
 set -e # exit script on error
-    
-# Extract artist from file metadata
-metadata=$(exiftool "$1")
-artist=$(echo "$metadata" | grep -m1 "^Artist[[:space:]]*:" | awk -F': ' '{print $2}')
-
-# If multiple artists present, then seperate for user to specify
-if [[ "$artist" == *","* ]]; then
-    IFS=',' read -ra artists <<< "$artist" # Split into array
-    echo "Multiple artists found:"
-
-    # Display numbered list
-    for i in "${!artists[@]}"; do
-        echo "$((i+1)). ${artists[$i]# }" # Remove any leading space
-    done
-
-    # Prompt user to specify artist to use for folder name
-    while true; do
-        read -p "Select which artist to use for folder: " choice
-
-        # Validate input
-        if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#artists[@]} )); then
-            artist="${artists[$((choice-1))]# }"  # Store selected artist
-            break
-        else
-            echo "Invalid selection. Please try again..."
-            echo
-        fi
-    done
-else
-    echo "Single artist detected."
-fi
-
-echo "Selected artist: $artist"
-echo
-
-# Create directory and move album into folder
-mkdir -p "$artist"
-echo "Created folder '$artist'"
-echo
-
-mv "$1" "$artist"
-echo "Moved '$1' into '$artist'"
-echo
-
-# Go inside new artist folder
-cd "$artist"
-
-album=$(echo "$metadata" | grep -m1 "^Album[[:space:]]*:" | awk -F': ' '{print $2}')
-
-# Album year can be in mutliple tags such as:
-# - Releasedate
-# - Year
-# - Releasetime
-# 
-# Try each tag until year is extracted
-year=$(echo "$metadata" | grep -m1 "date[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
-
-if [[ -z "$year" ]]; then
-    year=$(echo "$metadata" | grep -m1 "year[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
-fi
-
-if [[ -z "$year" ]]; then
-    year=$(echo "$metadata" | grep -m1 "time[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
-fi
-
-# Rename Album folder
-new_album_name="${year} - ${album}"
-if [[ "$1" == $new_album_name ]]; then
-    echo "Folder is already in correct format. Skipping..."
-    echo
-else
-    mv "$1" "$new_album_name"
-    echo "Renamed folder to '$new_album_name'"
-    echo
-fi
 
 # Mount NAS to system
 if mountpoint -q /mnt/NAS; then
@@ -88,19 +13,106 @@ else
     echo
 fi
 
-cd .. # exit album artist folder
 
-# Upload artist folder to NAS
 destination="/mnt/NAS/Music/test"
-echo "Copying '$artist' to '$destination'..."
-echo
-rsync -r -av --progress "$artist" "$destination"
 
-# Delete original files from system
-echo
-rm -r "$artist"
-echo "Deleted '$artist' from system"
-echo
+for album_folder in "$@"; do
+    echo "--------------------------------------"
+    echo "Processing $album_folder"
+    echo "--------------------------------------"
 
+    if [[ ! -d "$album_folder" ]]; then
+        echo "ERROR: '$album_folder' is not a directory. Skipping..."
+        continue
+    fi
+    
+    # Extract artist from file metadata
+    metadata=$(exiftool "$album_folder")
+    artist=$(echo "$metadata" | grep -m1 "^Artist[[:space:]]*:" | awk -F': ' '{print $2}')
+
+    # If multiple artists present, then seperate for user to specify
+    if [[ "$artist" == *","* ]]; then
+        IFS=',' read -ra artists <<< "$artist" # Split into array
+        echo "Multiple artists found:"
+
+        # Display numbered list
+        for i in "${!artists[@]}"; do
+            echo "$((i+1)). ${artists[$i]# }" # Remove any leading space
+        done
+
+        # Prompt user to specify artist to use for folder name
+        while true; do
+            read -p "Select which artist to use for folder: " choice
+
+            # Validate input
+            if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#artists[@]} )); then
+                artist="${artists[$((choice-1))]# }"  # Store selected artist
+                break
+            else
+                echo "Invalid selection. Please try again..."
+                echo
+            fi
+        done
+    else
+        echo "Single artist detected."
+    fi
+
+    echo "Selected artist: $artist"
+    echo
+
+    # Create directory and move album into folder
+    mkdir -p "$artist"
+    echo "Created folder '$artist'"
+    echo
+
+    mv "$album_folder" "$artist"
+    echo "Moved '$album_folder' into '$artist'"
+    echo
+
+    # Go inside new artist folder
+    cd "$artist"
+
+    album=$(echo "$metadata" | grep -m1 "^Album[[:space:]]*:" | awk -F': ' '{print $2}')
+
+    # Album year can be in mutliple tags such as:
+    # - Releasedate
+    # - Year
+    # - Releasetime
+    # 
+    # Try each tag until year is extracted
+    year=$(echo "$metadata" | grep -m1 "date[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+
+    if [[ -z "$year" ]]; then
+        year=$(echo "$metadata" | grep -m1 "year[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+    fi
+
+    if [[ -z "$year" ]]; then
+        year=$(echo "$metadata" | grep -m1 "time[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+    fi
+
+    # Rename Album folder
+    new_album_name="${year} - ${album}"
+    if [[ "$album_folder" == $new_album_name ]]; then
+        echo "Folder is already in correct format. Skipping..."
+        echo
+    else
+        mv "$album_folder" "$new_album_name"
+        echo "Renamed folder to '$new_album_name'"
+        echo
+    fi
+
+    cd .. # exit album artist folder
+
+    # Upload artist folder to NAS
+    echo "Copying '$artist' to '$destination'..."
+    echo
+    rsync -r -av --progress "$artist" "$destination"
+
+    # Delete original files from system
+    echo
+    rm -r "$artist"
+    echo "Deleted '$artist' from system"
+    echo
+
+done
 echo "Done."
-

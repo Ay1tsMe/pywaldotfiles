@@ -1,8 +1,8 @@
 #!/bin/bash
     
-# Extract artist from metadata
+# Extract artist from file metadata
 metadata=$(exiftool "$1")
-artist=$(echo "$metadata" | grep -w ^Artist | awk -F': ' '{print $2}')
+artist=$(echo "$metadata" | grep -m1 "^Artist[[:space:]]*:" | awk -F': ' '{print $2}')
 
 # If multiple artists present, then seperate for user to specify
 if [[ "$artist" == *","* ]]; then
@@ -32,3 +32,38 @@ else
 fi
 
 echo "Selected artist: $artist"
+echo
+
+# Create directory and move album into folder
+mkdir -p "$artist"
+echo "Created folder '$artist'"
+echo
+
+mv "$1" "$artist"
+echo "Moved '$1' into '$artist'"
+echo
+
+# Go inside new artist folder
+cd "$artist"
+echo "Currently inside: $(pwd)"
+
+album=$(echo "$metadata" | grep -m1 "^Album[[:space:]]*:" | awk -F': ' '{print $2}')
+
+# Album year can be in mutliple tags such as:
+# - Releasedate
+# - Year
+# - Releasetime
+# 
+# Try each tag until year is extracted
+year=$(echo "$metadata" | grep -m1 "date[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+
+if [[ -z "$year" ]]; then
+    year=$(echo "$metadata" | grep -m1 "year[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+fi
+
+if [[ -z "$year" ]]; then
+    year=$(echo "$metadata" | grep -m1 "time[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+fi
+
+echo "Album name: $album"
+echo "Album year: $year"

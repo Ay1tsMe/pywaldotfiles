@@ -34,7 +34,7 @@ show_help() {
         ├── 15 This Is for You.flac
         ├── 16 Mama Teaches Sanskrit.flac
         └── cover.jpg"
-
+    echo
     echo "Options:"
     echo "  -h, --help     Show this help message and exit"
     echo

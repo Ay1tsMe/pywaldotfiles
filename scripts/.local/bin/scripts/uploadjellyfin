@@ -2,6 +2,51 @@
 
 set -e # exit script on error
 
+show_help() {
+    echo "Usage: uploadjellyfin [album_folder1] [album_folder2] ..."
+    echo
+    echo "Organise and upload music albums to Jellyfin."
+    echo "This script:"
+    echo "  - Reads metadata (Artist, Album, Year) from music files in a folder"
+    echo "  - Creates an Artist folder and moves the album inside it"
+    echo "  - Renames the album folder to 'Year - Album'"
+    echo "  - Mounts NAS at /mnt/NAS (if not already)"
+    echo "  - Uploads to NAS"
+    echo "  - Deletes local copy afterwards"
+    echo
+    echo "Example Structure:"
+    echo "Four Tet
+    └── 2020 - Sixteen Oceans
+        ├── 01 School.flac
+        ├── 02 Baby.flac
+        ├── 03 Harpsichord.flac
+        ├── 04 Teenage Birdsong.flac
+        ├── 05 Romantics.flac
+        ├── 06 Love Salad.flac
+        ├── 07 Insect Near Piha Beach.flac
+        ├── 08 Hi Hello.flac
+        ├── 09 ISTM.flac
+        ├── 10 Something in the Sadness.flac
+        ├── 11 1993 Band Practice.flac
+        ├── 12 Green.flac
+        ├── 13 Bubbles at Overlook 25th March 2019.flac
+        ├── 14 4T Recordings.flac
+        ├── 15 This Is for You.flac
+        ├── 16 Mama Teaches Sanskrit.flac
+        └── cover.jpg"
+
+    echo "Options:"
+    echo "  -h, --help     Show this help message and exit"
+    echo
+}
+
+# If no arguments or -h flag detected, show help and exit
+if [[ $# -eq 0 || "$1" == "-h" || "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
+
 # Mount NAS to system
 if mountpoint -q /mnt/NAS; then
     echo "NAS already mounted. Skipping mounting process..."

@@ -66,7 +66,6 @@ fi
 
 # Rename Album folder
 new_album_name="${year} - ${album}"
-
 if [[ "$1" == $new_album_name ]]; then
     echo "Folder is already in correct format. Skipping..."
     echo
@@ -75,6 +74,30 @@ else
     echo "Renamed folder to '$new_album_name'"
     echo
 fi
+
+# Mount NAS to system
+if mountpoint -q /mnt/NAS; then
+    echo "NAS already mounted. Skipping mounting process..."
+    echo
+else
+    mountnas
+    echo "Mounted NAS to /mnt/NAS"
+    echo
+fi
+
+cd .. # exit album artist folder
+
+# Upload artist folder to NAS
+destination="/mnt/NAS/Music/test"
+echo "Copying '$artist' to '$destination'..."
+echo
+rsync -r -av --progress "$artist" "$destination"
+
+# Delete original files from system
+echo
+rm -r "$artist"
+echo "Deleted '$artist' from system"
+echo
 
 echo "Done."
 

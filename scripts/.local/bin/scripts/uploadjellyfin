@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -e # exit script on error
     
 # Extract artist from file metadata
 metadata=$(exiftool "$1")
@@ -80,8 +82,9 @@ if mountpoint -q /mnt/NAS; then
     echo "NAS already mounted. Skipping mounting process..."
     echo
 else
-    mountnas
-    echo "Mounted NAS to /mnt/NAS"
+    echo "Mounting NAS to /mnt/NAS"
+    sudo mount -t nfs 10.1.1.171:/nfs/Public /mnt/NAS
+    echo "Successfully mounted"
     echo
 fi
 

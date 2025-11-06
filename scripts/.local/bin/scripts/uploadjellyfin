@@ -1,0 +1,29 @@
+#!/bin/bash
+    
+# Extract artist from metadata
+metadata=$(exiftool "$1")
+artist=$(echo "$metadata" | grep -w ^Artist | awk -F': ' '{print $2}')
+
+# If multiple artists present, then seperate for user to specify
+if [[ "$artist" == *","* ]]; then
+    IFS=',' read -ra artists <<< "$artist" # Split into array
+    echo "Multiple artists found:"
+
+    # Display numbered list
+    for i in "${!artists[@]}"; do
+        echo "$((i+1)). ${artists[$i]# }" # Remove any leading space
+    done
+
+    read -p "Select which artist to use for folder: " choice
+
+    # Validate input
+    if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#artists[@]} )); then
+        artist="${artists[$((choice-1))]# }"  # Store selected artist
+    else
+        echo "Invalid selection. Please try again..."
+    fi
+else
+    echo "Single artist detected."
+fi
+
+echo "Selected artist: $artist"

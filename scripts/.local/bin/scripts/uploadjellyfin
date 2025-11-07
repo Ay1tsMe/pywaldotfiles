@@ -90,6 +90,9 @@ for album_folder in "$@"; do
     # Taiki Nulight; borne
     elif [[ "$artist" == *";"* ]]; then
         delimiter=";"
+    # Taiki Nulight/borne
+    elif [[ "$artist" == *"/"* ]]; then
+        delimiter="/"
     fi
     
     if [[ -n "$delimiter" ]]; then
@@ -141,19 +144,19 @@ for album_folder in "$@"; do
     fi
 
     # Album year can be in mutliple tags such as:
-    # - Releasedate
     # - Year
+    # - Releasedate
     # - Releasetime
     # 
     # Try each tag until year is extracted
-    year=$(echo "$metadata" | grep -im1 "date[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+        year=$(echo "$metadata" | grep -im1 "^year[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
 
     if [[ -z "$year" ]]; then
-        year=$(echo "$metadata" | grep -im1 "year[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+        year=$(echo "$metadata" | grep -im1 "^date[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
     fi
 
     if [[ -z "$year" ]]; then
-        year=$(echo "$metadata" | grep -im1 "time[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+        year=$(echo "$metadata" | grep -im1 "^time[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
     fi
 
     # Year metatdata missing. Requires manual input

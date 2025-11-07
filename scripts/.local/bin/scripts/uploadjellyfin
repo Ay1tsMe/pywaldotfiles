@@ -61,7 +61,7 @@ else
 fi
 
 
-destination="/mnt/NAS/Music/test"
+destination="/mnt/NAS/Music/music_library"
 
 for album_folder in "$@"; do
     echo "--------------------------------------"

@@ -79,7 +79,7 @@ for album_folder in "$@"; do
 
     # Artist metatdata missing. Requires manual input
     if [[ -z "$artist" ]]; then
-        read -p "Artist metdata missing from file. What is the artist of this album? " artist
+        read -p "Artist metadata missing from file. What is the artist of this album? " artist
     fi
 
     # If multiple artists present, then seperate for user to specify

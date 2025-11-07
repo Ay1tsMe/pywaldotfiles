@@ -100,8 +100,20 @@ for album_folder in "$@"; do
     
     if [[ -n "$delimiter" ]]; then
         IFS="$delimiter" read -ra artists <<< "$artist" # Split into array
-        echo "Multiple artists found:"
 
+        # Trimp whitespace for each artist
+        for i in "${!artists[@]}"; do
+            artists[$i]="${artists[$i]#"${artists[$i]%%[![:space:]]*}"}"
+            artists[$i]="${artists[$i]%"${artists[$i]##*[![:space:]]}"}"
+        done
+
+        if [[ "$delimiter" == "&" ]]; then
+            combined=$(printf " & %s" "${artists[@]}")
+            combined="${combined:3}"  # Remove leading ' & '
+            artists+=("$combined")
+        fi
+
+        echo "Multiple artists found:"
         # Display numbered list
         for i in "${!artists[@]}"; do
             echo "$((i+1)). ${artists[$i]# }" # Remove any leading space
@@ -114,8 +126,6 @@ for album_folder in "$@"; do
             # Validate input
             if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#artists[@]} )); then
                 artist="${artists[$((choice-1))]# }"  # Store selected artist
-                artist="${artist#"${artist%%[![:space:]]*}"}"   # Trim leading space
-                artist="${artist%"${artist##*[![:space:]]}"}"   # Trim trailing space
                 break
             else
                 echo "Invalid selection. Please try again..."

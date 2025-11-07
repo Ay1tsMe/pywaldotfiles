@@ -1,12 +1,26 @@
 #!/bin/bash
 
-# Validate input arguements
-if [ -z "$1" ]; then
-    echo "No book(s) provided to upload!"
-    echo "Usage: uploadbook <book1.epub|pdf> [book2.epub|pdf] ..."
-    exit 1
-fi
+set -e # exit script on error
 
+show_help() {
+    echo "Usage: uploadbook <book1.epub|pdf> [book2.epub|pdf] ..."
+    echo
+    echo "Organise and upload ebooks to Calibre."
+    echo "This script:"
+    echo "  - Reads metadata file and extracts Author"
+    echo "  - Creates an Author folder and moves the book inside it"
+    echo "  - Uploads to TuxTower"
+    echo
+    echo "Options:"
+    echo "  -h, --help     Show this help message and exit"
+    echo
+}
+
+# If no arguments or -h flag detected, show help and exit
+if [[ $# -eq 0 || "$1" == "-h" || "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
 
 for BOOK in "$@"; do
     echo

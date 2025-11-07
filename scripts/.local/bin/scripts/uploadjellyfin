@@ -73,9 +73,14 @@ for album_folder in "$@"; do
         continue
     fi
     
-    # Extract artist from file metadata
+    # Extract Albumartist from file metadata
     metadata=$(exiftool "$album_folder")
-    artist=$(echo "$metadata" | grep -m1 "^Artist[[:space:]]*:" | awk -F': ' '{print $2}')
+    artist=$(echo "$metadata" | grep -m1 "^Albumartist[[:space:]]*:" | awk -F': ' '{print $2}')
+
+    # Fallback to Artist if Albumartist missing
+    if [[ -z "$artist" ]]; then
+        artist=$(echo "$metadata" | grep -m1 "^Artist[[:space:]]*:" | awk -F': ' '{print $2}')
+    fi
 
     # Artist metatdata missing. Requires manual input
     if [[ -z "$artist" ]]; then

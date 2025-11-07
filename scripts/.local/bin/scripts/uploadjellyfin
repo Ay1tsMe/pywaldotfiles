@@ -93,6 +93,9 @@ for album_folder in "$@"; do
     # Taiki Nulight/borne
     elif [[ "$artist" == *"/"* ]]; then
         delimiter="/"
+    # Taiki Nulight & borne
+    elif [[ "$artist" == *"&"* ]]; then
+        delimiter="&"
     fi
     
     if [[ -n "$delimiter" ]]; then
@@ -111,6 +114,8 @@ for album_folder in "$@"; do
             # Validate input
             if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#artists[@]} )); then
                 artist="${artists[$((choice-1))]# }"  # Store selected artist
+                artist="${artist#"${artist%%[![:space:]]*}"}"   # Trim leading space
+                artist="${artist%"${artist##*[![:space:]]}"}"   # Trim trailing space
                 break
             else
                 echo "Invalid selection. Please try again..."

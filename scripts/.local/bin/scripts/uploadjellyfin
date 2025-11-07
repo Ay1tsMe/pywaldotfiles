@@ -49,9 +49,11 @@ fi
 
 # Mount NAS to system
 if mountpoint -q /mnt/NAS; then
+    echo
     echo "NAS already mounted. Skipping mounting process..."
     echo
 else
+    echo
     echo "Mounting NAS to /mnt/NAS"
     sudo mount -t nfs 10.1.1.171:/nfs/Public /mnt/NAS
     echo "Successfully mounted"
@@ -75,9 +77,23 @@ for album_folder in "$@"; do
     metadata=$(exiftool "$album_folder")
     artist=$(echo "$metadata" | grep -m1 "^Artist[[:space:]]*:" | awk -F': ' '{print $2}')
 
+    # Artist metatdata missing. Requires manual input
+    if [[ -z "$artist" ]]; then
+        read -p "Artist metdata missing from file. What is the artist of this album? " artist
+    fi
+
     # If multiple artists present, then seperate for user to specify
+    delimiter=""
+    # Taiki Nulight, borne
     if [[ "$artist" == *","* ]]; then
-        IFS=',' read -ra artists <<< "$artist" # Split into array
+        delimiter=","
+    # Taiki Nulight; borne
+    elif [[ "$artist" == *";"* ]]; then
+        delimiter=";"
+    fi
+    
+    if [[ -n "$delimiter" ]]; then
+        IFS="$delimiter" read -ra artists <<< "$artist" # Split into array
         echo "Multiple artists found:"
 
         # Display numbered list
@@ -119,20 +135,30 @@ for album_folder in "$@"; do
 
     album=$(echo "$metadata" | grep -m1 "^Album[[:space:]]*:" | awk -F': ' '{print $2}')
 
+    # Album metatdata missing. Requires manual input
+    if [[ -z "$album" ]]; then
+        read -p "Album metdata missing from file. What is the album called? " album
+    fi
+
     # Album year can be in mutliple tags such as:
     # - Releasedate
     # - Year
     # - Releasetime
     # 
     # Try each tag until year is extracted
-    year=$(echo "$metadata" | grep -m1 "date[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+    year=$(echo "$metadata" | grep -im1 "date[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
 
     if [[ -z "$year" ]]; then
-        year=$(echo "$metadata" | grep -m1 "year[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+        year=$(echo "$metadata" | grep -im1 "year[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
     fi
 
     if [[ -z "$year" ]]; then
-        year=$(echo "$metadata" | grep -m1 "time[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+        year=$(echo "$metadata" | grep -im1 "time[[:space:]]*:" | awk -F': ' '{print $2}' | awk -F'-' '{print $1}')
+    fi
+
+    # Year metatdata missing. Requires manual input
+    if [[ -z "$year" ]]; then
+        read -p "Year metdata missing from file. What year was this album released? " year
     fi
 
     # Rename Album folder

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Sync NAS music library with iPod
+
+# Check if iPod is mounted
+echo "Checking if iPod is mounted to /mnt/iPod..."
+if mountpoint -q /mnt/iPod; then
+    echo "iPod is mounted."
+    echo
+else
+    echo "iPod is not mounted. Please mount iPod to /mnt/iPod"
+    exit 1
+fi
+
+iPod_library="/mnt/iPod/Music"
+NAS_library="/mnt/NAS/Music/music_library/"
+
+# Check if iPod library is accessible
+echo "Checking if iPod music library is accessible..."
+if [[ -d "$iPod_library" && -x "$iPod_library" ]]; then
+    cd "$iPod_library"
+    echo "Successfully entered '$iPod_library'"
+    echo
+else
+    echo "Can't enter '$iPod_library', is your iPod mounted properly?"
+    exit 1
+fi
+
+# Mount NAS if not mounted
+echo "Mounting NAS to /mnt/NAS..."
+if mountpoint -q /mnt/NAS; then
+    echo "NAS is already mounted"
+    echo
+else
+    sudo mount -t nfs 10.1.1.171:/nfs/Public /mnt/NAS
+    echo "Successfully mounted NAS"
+    echo
+fi
+
+# Run rsync command
+echo "Syncing NAS library with iPod..."
+sudo rsync -r -av --progress --no-owner --no-group --ignore-existing "$NAS_library" "$iPod_library" 
+
+echo
+echo "Done."

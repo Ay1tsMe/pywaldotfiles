@@ -141,8 +141,8 @@
  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 ;; Transparent Background
-(set-frame-parameter nil 'alpha-background 70)
-(add-to-list 'default-frame-alist '(alpha-background . 0.8))
+;;(set-frame-parameter nil 'alpha-background 70)
+;;(add-to-list 'default-frame-alist '(alpha-background . 0.8))
 
 ;; Vim line numbers
 (setq display-line-numbers-type 'relative)

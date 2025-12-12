@@ -1,0 +1,106 @@
+#!/bin/bash
+
+use_local=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -s|--source) use_local=true
+        ;;
+        *) break
+    esac
+    shift
+done
+
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 [-s] <soundcloud_url|file>" >&2
+    exit 2
+fi
+
+echo
+# Get URL or local file
+input=$1
+if $use_local; then
+    [[ -f "$input" ]] || {
+        echo "File not found: $input"
+        exit 1
+    }
+    input=$(realpath "$input")
+    echo "Using local file: $input"
+else
+    echo "Using URL: $input"
+fi
+
+echo
+# Ping laptop
+if nc -z 10.1.1.74 22 > /dev/null 2>&1; then
+    echo "Laptop is online. Proceeding..."
+else
+    echo "Can't ping laptop. Check if it is online."
+    exit 1
+fi
+
+tmpdir=$(mktemp -d)
+cd "$tmpdir"
+
+echo
+# Download soundcloud song
+if $use_local; then
+    echo "Copying '$input' to '$tmpdir'..."
+    if rsync -av --progress "$input" .; then
+        echo "Copied '$input' to '$tmpdir' Successfully!"
+    else
+        echo "Failed to copy '$input' to '$tmpdir'... Exiting"
+        rm -r "$tmpdir"
+        exit 1
+    fi
+else
+    echo "Downloading $input..."
+    if scdl -l "$input"; then
+        song_title=$(mediainfo * | grep "^Title" | awk -F' : ' '{print $2}')
+        echo "Downloaded '$song_title' Successfully!"
+    else
+        echo "Failed to download $input... Exiting"
+        rm -r "$tmpdir"
+        exit 1
+    fi
+fi
+
+
+echo
+# Convert file to flac if needed
+file=$(find "$tmpdir" -maxdepth 1 -type f)
+
+ext="${file##*.}"
+
+if [[ "$ext" != "flac" ]]; then
+    out="${file%.*}.flac"
+    echo "Converting '$file' to flac..."
+    if ffmpeg -i "$file" "${file%.*}.flac"; then
+        rm "$file" # Delete old file
+        echo "Converted '$file' to flac Successfully!"
+    else
+        echo "Failed to convert '$file'... Exiting"
+        rm -r "$tmpdir"
+        exit 1
+    fi
+else
+    echo "File is already flac, skipping conversion."
+fi
+
+echo
+# Upload song to laptop
+file=$(find "$tmpdir" -maxdepth 1 -type f)
+
+echo "Uploading '$file' to laptop..."
+if rsync -av --progress "$file" laptop:~/Music/Mixxx/Dubstep/Soundcloud; then
+    echo "Successfully copied '$file' to laptop!"
+else
+    echo "Failed to copy '$file' to laptop... Exiting"
+    rm -r "$tmpdir"
+    exit 1
+fi
+
+echo
+# Remove temp directory
+rm -r "$tmpdir"
+echo "Done."
